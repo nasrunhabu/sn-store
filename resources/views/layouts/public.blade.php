@@ -62,7 +62,40 @@
 
                 <div class="ml-auto flex shrink-0 items-center gap-2 sm:gap-3 xl:ml-0">
                     @auth
-                        <a href="{{ route('dashboard') }}" class="hidden rounded-full px-4 py-2.5 text-sm font-bold text-gray-700 transition hover:bg-gray-100 sm:inline-flex">Akun saya</a>
+                        <details class="group relative hidden sm:block">
+                            <summary class="inline-flex cursor-pointer list-none items-center gap-2 rounded-full border border-gray-200 bg-white px-3.5 py-2.5 text-sm font-bold text-gray-700 transition hover:border-red-200 hover:text-red-700 [&::-webkit-details-marker]:hidden">
+                                <svg class="size-4 text-red-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                    <circle cx="12" cy="8" r="3.5"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 20a7 7 0 0 1 14 0"/>
+                                </svg>
+                                Akun saya
+                                <svg class="size-4 text-gray-400 transition group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M5.22 7.22a.75.75 0 0 1 1.06 0L10 10.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 8.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"/>
+                                </svg>
+                            </summary>
+                            <div class="absolute right-0 top-full z-50 mt-2 w-56 rounded-2xl border border-gray-100 bg-white p-2 shadow-xl shadow-gray-900/10">
+                                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-red-50 hover:text-red-700">
+                                    <svg class="size-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                        <circle cx="12" cy="8" r="3.5"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 20a7 7 0 0 1 14 0"/>
+                                    </svg>
+                                    Pengaturan profil
+                                </a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-gray-700 transition hover:bg-red-50 hover:text-red-700">
+                                        <svg class="size-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 17l5-5-5-5m5 5H3"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6"/>
+                                        </svg>
+                                        Keluar
+                                    </button>
+                                </form>
+                            </div>
+                        </details>
+                        @if (auth()->user()->isAdmin())
+                            <a href="{{ route('dashboard') }}" class="hidden rounded-full bg-red-700 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-red-800 sm:inline-flex">Dashboard</a>
+                        @endif
                     @else
                         <a href="{{ route('login') }}" class="hidden rounded-full border border-gray-200 px-4 py-2.5 text-sm font-bold text-gray-700 transition hover:border-red-200 hover:text-red-700 sm:inline-flex">Masuk</a>
                     @endauth
@@ -108,9 +141,19 @@
                     @foreach ($categories as $category)
                         <a href="{{ route('home', ['category' => $category]) }}#produk" class="rounded-xl px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-700">{{ $category }}</a>
                     @endforeach
-                    @guest
+                    @auth
+                        <span class="px-3 pb-1 pt-3 text-xs font-bold uppercase tracking-wider text-gray-400">Akun</span>
+                        <a href="{{ route('profile.edit') }}" class="rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 hover:bg-red-50 hover:text-red-700">Pengaturan profil</a>
+                        @if (auth()->user()->isAdmin())
+                            <a href="{{ route('dashboard') }}" class="mt-2 rounded-xl bg-red-700 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-red-800">Dashboard</a>
+                        @endif
+                        <form method="POST" action="{{ route('logout') }}" class="mt-1">
+                            @csrf
+                            <button type="submit" class="w-full rounded-xl px-3 py-2.5 text-left text-sm font-semibold text-gray-600 transition hover:bg-red-50 hover:text-red-700">Keluar</button>
+                        </form>
+                    @else
                         <a href="{{ route('login') }}" class="mt-2 rounded-xl bg-red-700 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-red-800 sm:hidden">Masuk</a>
-                    @endguest
+                    @endauth
                 </div>
             </nav>
         </header>

@@ -42,10 +42,14 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        if (strcasecmp($user->email, config('admin.initial_admin_email', '')) === 0) {
+            $user->forceFill(['is_admin' => true])->save();
+        }
+
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('home', absolute: false));
     }
 }
