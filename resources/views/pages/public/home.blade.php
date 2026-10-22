@@ -33,8 +33,8 @@
                         <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-red-100 backdrop-blur">Siap untuk produktif</span>
                         <h2 class="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">Kerja lebih fokus,<br><span class="text-red-300">ide makin lancar.</span></h2>
                         <p class="mt-5 max-w-lg text-sm leading-7 text-red-50/85 sm:text-base">Laptop dan aksesori andalan untuk mendukung setiap target besarmu.</p>
-                        <a href="{{ route('home', ['category' => 'Laptop']) }}#produk" class="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-extrabold text-red-800 shadow-lg transition hover:-translate-y-0.5 hover:bg-red-50">
-                            Jelajahi laptop
+                        <a href="{{ route('home') }}#produk" class="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-extrabold text-red-800 shadow-lg transition hover:-translate-y-0.5 hover:bg-red-50">
+                            Jelajahi produk
                             <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.69L10.22 5.03a.75.75 0 1 1 1.06-1.06l5.5 5.5a.75.75 0 0 1 0 1.06l-5.5 5.5a.75.75 0 1 1-1.06-1.06l4.22-4.22H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/></svg>
                         </a>
                     </div>
@@ -108,7 +108,7 @@
                     @if ($searchTerm !== '' || $selectedCategory !== '')
                         Hasil produk
                     @else
-                        10 Produk Terbaru
+                        {{ $products->count() }} Produk Tersedia
                     @endif
                 </h2>
                 <p class="mt-3 max-w-xl text-sm leading-6 text-gray-500 sm:text-base">

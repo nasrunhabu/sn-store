@@ -1,14 +1,17 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 it('redirects guests to login when they open the admin dashboard', function () {
+    Storage::fake('local');
     $response = $this->get(route('dashboard'));
 
     $response->assertRedirect(route('login'));
 });
 
 it('forbids non-admin users from opening the admin dashboard', function () {
+    Storage::fake('local');
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)->get(route('dashboard'));
@@ -16,7 +19,8 @@ it('forbids non-admin users from opening the admin dashboard', function () {
     $response->assertForbidden();
 });
 
-it('renders the admin dashboard with the registered user total', function () {
+it('renders the admin dashboard with demo module totals', function () {
+    Storage::fake('local');
     $user = User::factory()->create(['name' => 'Nadia Store']);
     $user->forceFill(['is_admin' => true])->save();
     User::factory()->count(2)->create();
@@ -28,11 +32,13 @@ it('renders the admin dashboard with the registered user total', function () {
         ->assertSee('Kategori')
         ->assertSee('Produk')
         ->assertSee('Transaksi')
-        ->assertSee('Pengguna terdaftar')
-        ->assertSee('3');
+        ->assertSee('Pengguna demo')
+        ->assertSee('4')
+        ->assertSee('data demo lokal');
 });
 
 it('shows the dashboard link to admins on the public page', function () {
+    Storage::fake('local');
     $user = User::factory()->create();
     $user->forceFill(['is_admin' => true])->save();
 
@@ -49,6 +55,7 @@ it('shows the dashboard link to admins on the public page', function () {
 });
 
 it('does not show the dashboard link to regular users on the public page', function () {
+    Storage::fake('local');
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)->get(route('home'));
@@ -64,6 +71,7 @@ it('does not show the dashboard link to regular users on the public page', funct
 });
 
 it('shows a login link to guests on the public page', function () {
+    Storage::fake('local');
     $response = $this->get(route('home'));
 
     $response->assertOk()

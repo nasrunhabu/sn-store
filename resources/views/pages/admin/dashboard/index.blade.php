@@ -40,6 +40,10 @@
             </div>
         </section>
 
+        <section class="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm leading-6 text-amber-900">
+            Kategori, produk, transaksi, dan pengguna di panel ini menggunakan data demo lokal. Data asli di database tidak dibaca atau diubah.
+        </section>
+
         <section aria-labelledby="overview-heading">
             <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
                 <div>
@@ -53,65 +57,26 @@
             </div>
 
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                <article class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm shadow-slate-900/[0.02]">
-                    <div class="flex items-start justify-between gap-3">
-                        <span class="flex size-11 items-center justify-center rounded-xl bg-red-50 text-red-700">
-                            <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                                <circle cx="9" cy="8" r="3.5"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.5 20a6.5 6.5 0 0 1 13 0m2-9.5a3.5 3.5 0 1 0 0-7m1 10a6.5 6.5 0 0 1 3 5.5"/>
-                            </svg>
-                        </span>
-                        <span class="rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Aktif</span>
-                    </div>
-                    <p class="mt-5 text-sm font-semibold text-slate-500">Pengguna terdaftar</p>
-                    <p class="mt-1 text-3xl font-extrabold tracking-tight text-slate-900">{{ number_format($userCount, 0, ',', '.') }}</p>
-                    <p class="mt-2 text-xs text-slate-400">Akun yang terdaftar di SN Store</p>
-                </article>
-
-                <article class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm shadow-slate-900/[0.02]">
-                    <div class="flex items-start justify-between gap-3">
-                        <span class="flex size-11 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
-                            <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5v-9Z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"/>
-                            </svg>
-                        </span>
-                        <span class="rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-amber-700">Segera hadir</span>
-                    </div>
-                    <p class="mt-5 text-sm font-semibold text-slate-500">Kategori</p>
-                    <p class="mt-1 text-2xl font-extrabold tracking-tight text-slate-400">Belum tersedia</p>
-                    <p class="mt-2 text-xs text-slate-400">Modul pengelolaan kategori</p>
-                </article>
-
-                <article class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm shadow-slate-900/[0.02]">
-                    <div class="flex items-start justify-between gap-3">
-                        <span class="flex size-11 items-center justify-center rounded-xl bg-sky-50 text-sky-700">
-                            <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m4 7 8-4 8 4-8 4-8-4Z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 12l8 4 8-4M4 17l8 4 8-4"/>
-                            </svg>
-                        </span>
-                        <span class="rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-amber-700">Segera hadir</span>
-                    </div>
-                    <p class="mt-5 text-sm font-semibold text-slate-500">Produk</p>
-                    <p class="mt-1 text-2xl font-extrabold tracking-tight text-slate-400">Belum tersedia</p>
-                    <p class="mt-2 text-xs text-slate-400">Modul pengelolaan katalog</p>
-                </article>
-
-                <article class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm shadow-slate-900/[0.02]">
-                    <div class="flex items-start justify-between gap-3">
-                        <span class="flex size-11 items-center justify-center rounded-xl bg-violet-50 text-violet-700">
-                            <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 6.5h18v11H3z"/>
-                                <path stroke-linecap="round" d="M7 10h4m-4 4h10"/>
-                            </svg>
-                        </span>
-                        <span class="rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-amber-700">Segera hadir</span>
-                    </div>
-                    <p class="mt-5 text-sm font-semibold text-slate-500">Transaksi</p>
-                    <p class="mt-1 text-2xl font-extrabold tracking-tight text-slate-400">Belum tersedia</p>
-                    <p class="mt-2 text-xs text-slate-400">Modul pengelolaan pesanan</p>
-                </article>
+                <a href="{{ route('admin.categories.index') }}" class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-md">
+                    <p class="text-sm font-semibold text-slate-500">Kategori demo</p>
+                    <p class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">{{ number_format($categoryCount, 0, ',', '.') }}</p>
+                    <p class="mt-2 text-xs font-bold text-red-700">Kelola kategori →</p>
+                </a>
+                <a href="{{ route('admin.products.index') }}" class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-md">
+                    <p class="text-sm font-semibold text-slate-500">Produk demo</p>
+                    <p class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">{{ number_format($productCount, 0, ',', '.') }}</p>
+                    <p class="mt-2 text-xs font-bold text-red-700">Kelola produk →</p>
+                </a>
+                <a href="{{ route('admin.transactions.index') }}" class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-md">
+                    <p class="text-sm font-semibold text-slate-500">Transaksi demo</p>
+                    <p class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">{{ number_format($transactionCount, 0, ',', '.') }}</p>
+                    <p class="mt-2 text-xs font-bold text-red-700">Kelola transaksi →</p>
+                </a>
+                <a href="{{ route('admin.users.index') }}" class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-md">
+                    <p class="text-sm font-semibold text-slate-500">Pengguna demo</p>
+                    <p class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">{{ number_format($userCount, 0, ',', '.') }}</p>
+                    <p class="mt-2 text-xs font-bold text-red-700">Lihat pengguna →</p>
+                </a>
             </div>
         </section>
 
@@ -135,7 +100,7 @@
                         </svg>
                     </span>
                     <h3 class="mt-4 text-sm font-extrabold text-slate-800">Aktivitas akan muncul di sini</h3>
-                    <p class="mt-1.5 max-w-sm text-xs leading-5 text-slate-500">Riwayat pengelolaan produk dan transaksi akan tersedia setelah modulnya aktif.</p>
+                    <p class="mt-1.5 max-w-sm text-xs leading-5 text-slate-500">Modul kategori, produk, transaksi, dan pengguna demo sudah aktif. Produk yang diaktifkan tampil di etalase.</p>
                 </div>
             </div>
 
@@ -180,9 +145,9 @@
                         </span>
                         <span class="min-w-0 flex-1">
                             <span class="block text-xs font-bold text-slate-800">Manajemen data</span>
-                            <span class="mt-0.5 block text-[11px] text-slate-400">Modul sedang disiapkan</span>
+                            <span class="mt-0.5 block text-[11px] text-slate-400">Menggunakan berkas demo lokal</span>
                         </span>
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-700">Segera</span>
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Aktif</span>
                     </li>
                 </ul>
                 <a href="{{ route('profile.edit') }}" class="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700">

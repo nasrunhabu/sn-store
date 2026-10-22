@@ -186,8 +186,9 @@
                     <ul class="mt-4 space-y-3 text-sm text-gray-500">
                         <li><a href="{{ route('home') }}" class="transition hover:text-red-700">Beranda</a></li>
                         <li><a href="{{ route('home') }}#produk" class="transition hover:text-red-700">Semua produk</a></li>
-                        <li><a href="{{ route('home', ['category' => 'Smartphone']) }}#produk" class="transition hover:text-red-700">Smartphone</a></li>
-                        <li><a href="{{ route('home', ['category' => 'Audio']) }}#produk" class="transition hover:text-red-700">Audio</a></li>
+                        @foreach ($categories as $category)
+                            <li><a href="{{ route('home', ['category' => $category]) }}#produk" class="transition hover:text-red-700">{{ $category }}</a></li>
+                        @endforeach
                     </ul>
                 </div>
 

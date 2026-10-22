@@ -50,7 +50,7 @@
                         <p class="px-3 text-[10px] font-extrabold uppercase tracking-[0.2em] text-red-200/50">Workspace</p>
                         <ul class="mt-3 space-y-1.5">
                             <li>
-                                <a href="{{ route('dashboard') }}" aria-current="page" @click="sidebarOpen = false" class="flex items-center gap-3 rounded-xl bg-white px-3.5 py-3 text-sm font-bold text-red-900 shadow-lg shadow-black/10">
+                                <a href="{{ route('dashboard') }}" @if (request()->routeIs('dashboard')) aria-current="page" @endif @click="sidebarOpen = false" class="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition {{ request()->routeIs('dashboard') ? 'bg-white font-bold text-red-900 shadow-lg shadow-black/10' : 'text-red-100/75 hover:bg-white/10 hover:text-white' }}">
                                     <svg class="size-5 text-red-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                                         <rect x="3" y="3" width="8" height="8" rx="2"/>
                                         <rect x="13" y="3" width="8" height="5" rx="2"/>
@@ -61,44 +61,40 @@
                                 </a>
                             </li>
                             <li>
-                                <span aria-disabled="true" class="flex cursor-not-allowed items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold text-red-100/65">
+                                <a href="{{ route('admin.categories.index') }}" @if (request()->routeIs('admin.categories.*')) aria-current="page" @endif @click="sidebarOpen = false" class="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition {{ request()->routeIs('admin.categories.*') ? 'bg-white font-bold text-red-900 shadow-lg shadow-black/10' : 'text-red-100/75 hover:bg-white/10 hover:text-white' }}">
                                     <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5v-9Z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 7.8 7.5 4.4 7.5-4.4M12 12.2V21"/>
                                     </svg>
                                     <span class="flex-1">Kategori</span>
-                                    <span class="rounded-md bg-white/10 px-1.5 py-1 text-[9px] font-bold uppercase tracking-wider text-red-100/60">Segera</span>
-                                </span>
+                                </a>
                             </li>
                             <li>
-                                <span aria-disabled="true" class="flex cursor-not-allowed items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold text-red-100/65">
+                                <a href="{{ route('admin.products.index') }}" @if (request()->routeIs('admin.products.*')) aria-current="page" @endif @click="sidebarOpen = false" class="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition {{ request()->routeIs('admin.products.*') ? 'bg-white font-bold text-red-900 shadow-lg shadow-black/10' : 'text-red-100/75 hover:bg-white/10 hover:text-white' }}">
                                     <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m4 7 8-4 8 4-8 4-8-4Z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 12l8 4 8-4M4 17l8 4 8-4"/>
                                     </svg>
                                     <span class="flex-1">Produk</span>
-                                    <span class="rounded-md bg-white/10 px-1.5 py-1 text-[9px] font-bold uppercase tracking-wider text-red-100/60">Segera</span>
-                                </span>
+                                </a>
                             </li>
                             <li>
-                                <span aria-disabled="true" class="flex cursor-not-allowed items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold text-red-100/65">
+                                <a href="{{ route('admin.transactions.index') }}" @if (request()->routeIs('admin.transactions.*')) aria-current="page" @endif @click="sidebarOpen = false" class="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition {{ request()->routeIs('admin.transactions.*') ? 'bg-white font-bold text-red-900 shadow-lg shadow-black/10' : 'text-red-100/75 hover:bg-white/10 hover:text-white' }}">
                                     <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 6.5h18v11H3z"/>
                                         <path stroke-linecap="round" d="M7 10h4m-4 4h10"/>
                                     </svg>
                                     <span class="flex-1">Transaksi</span>
-                                    <span class="rounded-md bg-white/10 px-1.5 py-1 text-[9px] font-bold uppercase tracking-wider text-red-100/60">Segera</span>
-                                </span>
+                                </a>
                             </li>
                             <li>
-                                <span aria-disabled="true" class="flex cursor-not-allowed items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold text-red-100/65">
+                                <a href="{{ route('admin.users.index') }}" @if (request()->routeIs('admin.users.*')) aria-current="page" @endif @click="sidebarOpen = false" class="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition {{ request()->routeIs('admin.users.*') ? 'bg-white font-bold text-red-900 shadow-lg shadow-black/10' : 'text-red-100/75 hover:bg-white/10 hover:text-white' }}">
                                     <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
                                         <circle cx="9" cy="8" r="3.5"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.5 20a6.5 6.5 0 0 1 13 0m2-9.5a3.5 3.5 0 1 0 0-7m1 10a6.5 6.5 0 0 1 3 5.5"/>
                                     </svg>
                                     <span class="flex-1">Pengguna</span>
-                                    <span class="rounded-md bg-white/10 px-1.5 py-1 text-[9px] font-bold uppercase tracking-wider text-red-100/60">Segera</span>
-                                </span>
+                                </a>
                             </li>
                         </ul>
                     </div>
