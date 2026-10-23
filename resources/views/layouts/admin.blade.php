@@ -96,6 +96,17 @@
                                     <span class="flex-1">Pengguna</span>
                                 </a>
                             </li>
+                            @can('manage roles')
+                                <li>
+                                    <a href="{{ route('admin.roles.index') }}" @if (request()->routeIs('admin.roles.*')) aria-current="page" @endif @click="sidebarOpen = false" class="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition {{ request()->routeIs('admin.roles.*') ? 'bg-white font-bold text-red-900 shadow-lg shadow-black/10' : 'text-red-100/75 hover:bg-white/10 hover:text-white' }}">
+                                        <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3 4 6v5c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6l-8-3Z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="m9 12 2 2 4-4"/>
+                                        </svg>
+                                        <span class="flex-1">Role & permission</span>
+                                    </a>
+                                </li>
+                            @endcan
                         </ul>
                     </div>
                 </nav>

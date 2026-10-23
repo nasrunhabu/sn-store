@@ -41,10 +41,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-
-        if (strcasecmp($user->email, config('admin.initial_admin_email', '')) === 0) {
-            $user->forceFill(['is_admin' => true])->save();
-        }
+        $user->assignRole('Customer');
 
         event(new Registered($user));
 

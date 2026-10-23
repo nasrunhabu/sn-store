@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Database\Seeders\RolePermissionSeeder;
 
 test('registration screen can be rendered', function () {
     $response = $this->get('/register');
@@ -9,6 +10,8 @@ test('registration screen can be rendered', function () {
 });
 
 test('new users can register', function () {
+    $this->seed(RolePermissionSeeder::class);
+
     $response = $this->post('/register', [
         'name' => 'Test User',
         'email' => 'test@example.com',
@@ -17,19 +20,23 @@ test('new users can register', function () {
     ]);
 
     $this->assertAuthenticated();
+    expect(auth()->user()->hasRole('Customer'))->toBeTrue();
     $response->assertRedirect(route('home', absolute: false));
 });
 
-test('the configured initial administrator is registered with admin access', function () {
+test('registering with an administrative email does not grant an elevated role', function () {
+    $this->seed(RolePermissionSeeder::class);
+
     $response = $this->post('/register', [
         'name' => 'SN Store Admin',
-        'email' => config('admin.initial_admin_email'),
+        'email' => 'admin@sn-store.com',
         'password' => 'password',
         'password_confirmation' => 'password',
     ]);
 
-    $user = User::query()->where('email', config('admin.initial_admin_email'))->firstOrFail();
+    $user = User::query()->where('email', 'admin@sn-store.com')->firstOrFail();
 
-    expect($user->isAdmin())->toBeTrue();
+    expect($user->hasRole('Customer'))->toBeTrue()
+        ->and($user->canAccessAdminPanel())->toBeFalse();
     $response->assertRedirect(route('home', absolute: false));
 });

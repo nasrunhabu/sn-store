@@ -93,11 +93,12 @@
                                 </form>
                             </div>
                         </details>
-                        @if (auth()->user()->isAdmin())
+                        @if (auth()->user()->canAccessAdminPanel())
                             <a href="{{ route('dashboard') }}" class="hidden rounded-full bg-red-700 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-red-800 sm:inline-flex">Dashboard</a>
                         @endif
                     @else
                         <a href="{{ route('login') }}" class="hidden rounded-full border border-gray-200 px-4 py-2.5 text-sm font-bold text-gray-700 transition hover:border-red-200 hover:text-red-700 sm:inline-flex">Masuk</a>
+                        <a href="{{ route('register') }}" class="hidden rounded-full bg-red-700 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-red-800 sm:inline-flex">Daftar</a>
                     @endauth
 
                     <button type="button" class="relative flex size-10 items-center justify-center rounded-full bg-gray-50 text-gray-700 transition hover:bg-red-50 hover:text-red-700" aria-label="Keranjang belanja, 0 item">
@@ -144,7 +145,7 @@
                     @auth
                         <span class="px-3 pb-1 pt-3 text-xs font-bold uppercase tracking-wider text-gray-400">Akun</span>
                         <a href="{{ route('profile.edit') }}" class="rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 hover:bg-red-50 hover:text-red-700">Pengaturan profil</a>
-                        @if (auth()->user()->isAdmin())
+                        @if (auth()->user()->canAccessAdminPanel())
                             <a href="{{ route('dashboard') }}" class="mt-2 rounded-xl bg-red-700 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-red-800">Dashboard</a>
                         @endif
                         <form method="POST" action="{{ route('logout') }}" class="mt-1">
@@ -153,6 +154,7 @@
                         </form>
                     @else
                         <a href="{{ route('login') }}" class="mt-2 rounded-xl bg-red-700 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-red-800 sm:hidden">Masuk</a>
+                        <a href="{{ route('register') }}" class="rounded-xl border border-red-200 px-3 py-2.5 text-center text-sm font-bold text-red-700 transition hover:bg-red-50 sm:hidden">Daftar</a>
                     @endauth
                 </div>
             </nav>

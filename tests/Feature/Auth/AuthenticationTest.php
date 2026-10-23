@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Database\Seeders\RolePermissionSeeder;
 
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
@@ -21,8 +22,9 @@ test('users can authenticate using the login screen', function () {
 });
 
 test('admins are redirected to the admin dashboard after login', function () {
+    $this->seed(RolePermissionSeeder::class);
     $user = User::factory()->create();
-    $user->forceFill(['is_admin' => true])->save();
+    $user->assignRole('Admin');
 
     $response = $this->post('/login', [
         'email' => $user->email,

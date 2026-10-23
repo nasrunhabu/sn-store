@@ -2,12 +2,14 @@
 
 use App\DemoStore;
 use App\Models\User;
+use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Support\Facades\Storage;
 
 it('publishes active products created in the admin catalog', function () {
     Storage::fake('local');
+    $this->seed(RolePermissionSeeder::class);
     $admin = User::factory()->create();
-    $admin->forceFill(['is_admin' => true])->save();
+    $admin->assignRole('Admin');
 
     $this->actingAs($admin)
         ->post(route('admin.categories.store'), ['name' => 'Kamera'])
@@ -54,8 +56,9 @@ it('publishes active products created in the admin catalog', function () {
 
 it('rejects invalid product prices without changing the demo catalog', function () {
     Storage::fake('local');
+    $this->seed(RolePermissionSeeder::class);
     $admin = User::factory()->create();
-    $admin->forceFill(['is_admin' => true])->save();
+    $admin->assignRole('Admin');
 
     $this->actingAs($admin)
         ->from(route('admin.products.create'))
@@ -76,8 +79,9 @@ it('rejects invalid product prices without changing the demo catalog', function 
 
 it('rejects non-web image URLs for demo products', function () {
     Storage::fake('local');
+    $this->seed(RolePermissionSeeder::class);
     $admin = User::factory()->create();
-    $admin->forceFill(['is_admin' => true])->save();
+    $admin->assignRole('Admin');
 
     $this->actingAs($admin)
         ->from(route('admin.products.create'))
@@ -98,8 +102,9 @@ it('rejects non-web image URLs for demo products', function () {
 
 it('prevents deleting a category that still has products', function () {
     Storage::fake('local');
+    $this->seed(RolePermissionSeeder::class);
     $admin = User::factory()->create();
-    $admin->forceFill(['is_admin' => true])->save();
+    $admin->assignRole('Admin');
 
     $this->actingAs($admin)
         ->delete(route('admin.categories.destroy', 'cat-laptop'))
@@ -111,8 +116,9 @@ it('prevents deleting a category that still has products', function () {
 
 it('updates demo transaction statuses and shows only sample users', function () {
     Storage::fake('local');
+    $this->seed(RolePermissionSeeder::class);
     $admin = User::factory()->create(['name' => 'Admin Asli', 'email' => 'admin@sn-store.test']);
-    $admin->forceFill(['is_admin' => true])->save();
+    $admin->assignRole('Admin');
 
     $this->actingAs($admin)
         ->put(route('admin.transactions.update', 'SN-2026-002'), ['status' => 'Status palsu'])
@@ -135,8 +141,9 @@ it('updates demo transaction statuses and shows only sample users', function () 
 
 it('renders every demo management page for administrators', function () {
     Storage::fake('local');
+    $this->seed(RolePermissionSeeder::class);
     $admin = User::factory()->create();
-    $admin->forceFill(['is_admin' => true])->save();
+    $admin->assignRole('Admin');
 
     $this->actingAs($admin)
         ->get(route('admin.categories.index'))

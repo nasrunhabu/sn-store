@@ -3,6 +3,7 @@
 use App\DemoStore;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
@@ -20,9 +21,9 @@ Route::get('/dashboard', function (DemoStore $store) {
         'transactionCount' => count($data['transactions']),
         'userCount' => count($data['users']),
     ]);
-})->middleware(['auth', 'verified', 'can:access-admin'])->name('dashboard');
+})->middleware(['auth', 'verified', 'role:Super Admin|Admin'])->name('dashboard');
 
-Route::middleware(['auth', 'verified', 'can:access-admin'])
+Route::middleware(['auth', 'verified', 'role:Super Admin|Admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function (): void {
@@ -42,6 +43,11 @@ Route::middleware(['auth', 'verified', 'can:access-admin'])
         Route::put('/transaksi/{transaction}', [TransactionController::class, 'update'])->name('transactions.update');
 
         Route::get('/pengguna', [UserController::class, 'index'])->name('users.index');
+
+        Route::middleware(['role:Super Admin', 'permission:manage roles'])->group(function (): void {
+            Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+            Route::put('/roles/{user}', [RoleController::class, 'update'])->name('roles.update');
+        });
     });
 
 Route::middleware('auth')->group(function () {
