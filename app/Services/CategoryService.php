@@ -76,6 +76,14 @@ class CategoryService
      */
     public function delete(Category $category): array
     {
+        if ($category->products()->exists()) {
+            return [
+                'title' => 'Kategori tidak dapat dihapus',
+                'text' => "Kategori \"{$category->name}\" masih digunakan oleh produk.",
+                'icon' => 'error',
+            ];
+        }
+
         $categoryName = $category->name;
         $category->delete();
 

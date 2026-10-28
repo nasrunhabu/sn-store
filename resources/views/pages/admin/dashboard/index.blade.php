@@ -63,7 +63,7 @@
                     <p class="mt-2 text-xs font-bold text-red-700">Kelola kategori →</p>
                 </a>
                 <a href="{{ route('admin.products.index') }}" class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-md">
-                    <p class="text-sm font-semibold text-slate-500">Produk demo</p>
+                    <p class="text-sm font-semibold text-slate-500">Produk</p>
                     <p class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">{{ number_format($productCount, 0, ',', '.') }}</p>
                     <p class="mt-2 text-xs font-bold text-red-700">Kelola produk →</p>
                 </a>
@@ -100,7 +100,7 @@
                         </svg>
                     </span>
                     <h3 class="mt-4 text-sm font-extrabold text-slate-800">Aktivitas akan muncul di sini</h3>
-                    <p class="mt-1.5 max-w-sm text-xs leading-5 text-slate-500">Kategori tersimpan di database, sedangkan produk, transaksi, dan pengguna masih menggunakan data demo. Produk aktif tampil di etalase.</p>
+                    <p class="mt-1.5 max-w-sm text-xs leading-5 text-slate-500">Kategori dan produk tersimpan di database. Transaksi dan pengguna masih menggunakan data demo.</p>
                 </div>
             </div>
 

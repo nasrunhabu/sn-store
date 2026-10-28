@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Support\Facades\Storage;
@@ -21,13 +22,13 @@ it('forbids non-admin users from opening the admin dashboard', function () {
     $response->assertForbidden();
 });
 
-it('renders the admin dashboard with database category and demo module totals', function () {
+it('renders the admin dashboard with database category and product totals', function () {
     Storage::fake('local');
     $this->seed(RolePermissionSeeder::class);
     $user = User::factory()->create(['name' => 'Nadia Store']);
     $user->assignRole('Admin');
     User::factory()->count(2)->create();
-    Category::create([
+    $category = Category::create([
         'name' => 'Kategori Satu',
         'slug' => 'kategori-satu',
         'is_active' => true,
@@ -37,13 +38,22 @@ it('renders the admin dashboard with database category and demo module totals', 
         'slug' => 'kategori-dua',
         'is_active' => true,
     ]);
+    Product::create([
+        'category_id' => $category->id,
+        'name' => 'Produk Database',
+        'price' => 100000,
+        'badge' => 'Baru',
+        'image_path' => 'products/sample.jpg',
+        'image_alt' => 'Produk database',
+        'is_active' => true,
+    ]);
 
     $response = $this->actingAs($user)->get(route('dashboard'));
 
     $response->assertStatus(200)
         ->assertSee('Selamat datang, Nadia Store.')
         ->assertSee('Kategori</p>', false)
-        ->assertSee('Produk')
+        ->assertSee('>1<', false)
         ->assertSee('Transaksi')
         ->assertSee('Pengguna demo')
         ->assertSee('>2<', false)

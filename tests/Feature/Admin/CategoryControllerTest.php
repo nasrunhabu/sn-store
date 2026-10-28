@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 
@@ -199,4 +200,35 @@ it('deletes a database category', function () {
         ]);
 
     $this->assertDatabaseMissing('categories', ['id' => $category->id]);
+});
+
+it('prevents deleting a category that is assigned to a product', function () {
+    $this->seed(RolePermissionSeeder::class);
+    $admin = User::factory()->create();
+    $admin->assignRole('Admin');
+    $category = Category::create([
+        'name' => 'Kategori Terpakai',
+        'slug' => 'kategori-terpakai',
+        'is_active' => true,
+    ]);
+    Product::create([
+        'category_id' => $category->id,
+        'name' => 'Produk Terhubung',
+        'price' => 100000,
+        'badge' => 'Baru',
+        'image_path' => 'products/sample.jpg',
+        'image_alt' => 'Produk contoh',
+        'is_active' => true,
+    ]);
+
+    $this->actingAs($admin)
+        ->delete(route('admin.categories.destroy', $category))
+        ->assertRedirect(route('admin.categories.index'))
+        ->assertSessionHas('category_alert', [
+            'title' => 'Kategori tidak dapat dihapus',
+            'text' => 'Kategori "Kategori Terpakai" masih digunakan oleh produk.',
+            'icon' => 'error',
+        ]);
+
+    $this->assertModelExists($category);
 });

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicHomeController;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', PublicHomeController::class)->name('home');
@@ -18,7 +19,7 @@ Route::get('/dashboard', function (DemoStore $store) {
 
     return view('pages.admin.dashboard.index', [
         'categoryCount' => Category::query()->count(),
-        'productCount' => count($data['products']),
+        'productCount' => Product::query()->count(),
         'transactionCount' => count($data['transactions']),
         'userCount' => count($data['users']),
     ]);
