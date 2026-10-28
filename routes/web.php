@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicHomeController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', PublicHomeController::class)->name('home');
@@ -16,7 +17,7 @@ Route::get('/dashboard', function (DemoStore $store) {
     $data = $store->all();
 
     return view('pages.admin.dashboard.index', [
-        'categoryCount' => count($data['categories']),
+        'categoryCount' => Category::query()->count(),
         'productCount' => count($data['products']),
         'transactionCount' => count($data['transactions']),
         'userCount' => count($data['users']),
@@ -28,7 +29,9 @@ Route::middleware(['auth', 'verified', 'role:Super Admin|Admin'])
     ->name('admin.')
     ->group(function (): void {
         Route::get('/kategori', [CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/kategori/tambah', [CategoryController::class, 'create'])->name('categories.create');
         Route::post('/kategori', [CategoryController::class, 'store'])->name('categories.store');
+        Route::get('/kategori/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
         Route::put('/kategori/{category}', [CategoryController::class, 'update'])->name('categories.update');
         Route::delete('/kategori/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 

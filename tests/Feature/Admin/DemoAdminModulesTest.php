@@ -1,6 +1,7 @@
 <?php
 
 use App\DemoStore;
+use App\Models\Category;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Support\Facades\Storage;
@@ -11,11 +12,7 @@ it('publishes active products created in the admin catalog', function () {
     $admin = User::factory()->create();
     $admin->assignRole('Admin');
 
-    $this->actingAs($admin)
-        ->post(route('admin.categories.store'), ['name' => 'Kamera'])
-        ->assertRedirect(route('admin.categories.index'));
-
-    $category = collect(app(DemoStore::class)->all()['categories'])->firstWhere('name', 'Kamera');
+    $category = collect(app(DemoStore::class)->all()['categories'])->firstWhere('id', 'cat-audio');
 
     $this->actingAs($admin)
         ->post(route('admin.products.store'), [
@@ -30,7 +27,7 @@ it('publishes active products created in the admin catalog', function () {
         ])
         ->assertRedirect(route('admin.products.index'));
 
-    $this->get(route('home', ['category' => 'Kamera']))
+    $this->get(route('home', ['category' => $category['name']]))
         ->assertOk()
         ->assertSee('Kamera Demo')
         ->assertSee('Rp 2.500.000');
@@ -100,20 +97,6 @@ it('rejects non-web image URLs for demo products', function () {
         ->not->toContain('Gambar Tidak Valid');
 });
 
-it('prevents deleting a category that still has products', function () {
-    Storage::fake('local');
-    $this->seed(RolePermissionSeeder::class);
-    $admin = User::factory()->create();
-    $admin->assignRole('Admin');
-
-    $this->actingAs($admin)
-        ->delete(route('admin.categories.destroy', 'cat-laptop'))
-        ->assertSessionHasErrors('category');
-
-    expect(collect(app(DemoStore::class)->all()['categories'])->pluck('id'))
-        ->toContain('cat-laptop');
-});
-
 it('updates demo transaction statuses and shows only sample users', function () {
     Storage::fake('local');
     $this->seed(RolePermissionSeeder::class);
@@ -139,7 +122,7 @@ it('updates demo transaction statuses and shows only sample users', function () 
         ->assertSee('data pengguna contoh');
 });
 
-it('renders every demo management page for administrators', function () {
+it('renders admin category and product pages', function () {
     Storage::fake('local');
     $this->seed(RolePermissionSeeder::class);
     $admin = User::factory()->create();
@@ -148,7 +131,8 @@ it('renders every demo management page for administrators', function () {
     $this->actingAs($admin)
         ->get(route('admin.categories.index'))
         ->assertOk()
-        ->assertSee('Daftar kategori');
+        ->assertSee('Daftar kategori')
+        ->assertSee('Belum ada kategori di database.');
 
     $this->get(route('admin.products.index'))
         ->assertOk()
@@ -157,6 +141,34 @@ it('renders every demo management page for administrators', function () {
     $this->get(route('admin.products.create'))
         ->assertOk()
         ->assertSee('Tambah produk');
+});
+
+it('lists categories from the database without demo category controls', function () {
+    $this->seed(RolePermissionSeeder::class);
+    $admin = User::factory()->create();
+    $admin->assignRole('Admin');
+
+    $category = Category::create([
+        'name' => 'Kategori Database',
+        'slug' => 'kategori-database',
+        'description' => 'Deskripsi kategori dari database',
+        'is_active' => false,
+    ]);
+
+    $this->actingAs($admin)
+        ->get(route('admin.categories.index'))
+        ->assertOk()
+        ->assertSee('1 kategori tersimpan di database')
+        ->assertSee('Kategori Database')
+        ->assertSee('kategori-database')
+        ->assertSee('Deskripsi kategori dari database')
+        ->assertSee('Nonaktif')
+        ->assertSee('Tambah kategori')
+        ->assertSee(route('admin.categories.edit', $category))
+        ->assertSee('data-category-delete-form', false)
+        ->assertSee('window.Swal.fire', false);
+
+    $this->assertModelExists($category);
 });
 
 it('forbids non-admin users from opening the demo catalog', function () {
