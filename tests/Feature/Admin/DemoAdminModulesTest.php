@@ -5,11 +5,16 @@ use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Support\Facades\Storage;
 
-it('updates demo transaction statuses and shows only sample users', function () {
+it('updates demo transaction statuses and lists users from the database', function () {
     Storage::fake('local');
     $this->seed(RolePermissionSeeder::class);
     $admin = User::factory()->create(['name' => 'Admin Asli', 'email' => 'admin@sn-store.test']);
     $admin->assignRole('Admin');
+    $customer = User::factory()->unverified()->create([
+        'name' => 'Pelanggan Database',
+        'email' => 'pelanggan@sn-store.test',
+    ]);
+    $customer->assignRole('Customer');
 
     $this->actingAs($admin)
         ->put(route('admin.transactions.update', 'SN-2026-002'), ['status' => 'Status palsu'])
@@ -25,9 +30,15 @@ it('updates demo transaction statuses and shows only sample users', function () 
 
     $this->get(route('admin.users.index'))
         ->assertOk()
-        ->assertSee('nadia@example.com')
-        ->assertDontSee('admin@sn-store.test')
-        ->assertSee('data pengguna contoh');
+        ->assertSee('2 pengguna tersimpan di database')
+        ->assertSee('admin@sn-store.test')
+        ->assertSee('pelanggan@sn-store.test')
+        ->assertSee('Admin')
+        ->assertSee('Customer')
+        ->assertSee('Terverifikasi')
+        ->assertSee('Belum diverifikasi')
+        ->assertDontSee('nadia@example.com')
+        ->assertDontSee('data pengguna contoh');
 });
 
 it('renders admin category and product pages', function () {

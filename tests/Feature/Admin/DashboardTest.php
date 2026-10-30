@@ -55,9 +55,9 @@ it('renders the admin dashboard with database category and product totals', func
         ->assertSee('Kategori</p>', false)
         ->assertSee('>1<', false)
         ->assertSee('Transaksi')
-        ->assertSee('Pengguna demo')
-        ->assertSee('>2<', false)
-        ->assertSee('data demo lokal');
+        ->assertSee('Pengguna')
+        ->assertSee('>3<', false)
+        ->assertSee('Transaksi masih menggunakan data demo.');
 });
 
 it('shows the dashboard link to admins on the public page', function () {

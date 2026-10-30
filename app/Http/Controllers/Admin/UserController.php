@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\DemoStore;
 use App\Http\Controllers\Controller;
+use App\Services\UserService;
 use Illuminate\View\View;
 
 class UserController extends Controller
 {
-    public function index(DemoStore $store): View
+    public function index(UserService $userService): View
     {
-        $users = collect($store->all()['users'])->sortBy('name')->values();
-
-        return view('pages.admin.users.index', compact('users'));
+        return view('pages.admin.users.index', [
+            'users' => $userService->getUsers(),
+        ]);
     }
 }

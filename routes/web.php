@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicHomeController;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', PublicHomeController::class)->name('home');
@@ -21,7 +22,7 @@ Route::get('/dashboard', function (DemoStore $store) {
         'categoryCount' => Category::query()->count(),
         'productCount' => Product::query()->count(),
         'transactionCount' => count($data['transactions']),
-        'userCount' => count($data['users']),
+        'userCount' => User::query()->count(),
     ]);
 })->middleware(['auth', 'verified', 'role:Super Admin|Admin'])->name('dashboard');
 
