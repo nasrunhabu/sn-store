@@ -40,10 +40,6 @@
             </div>
         </section>
 
-        <section class="rounded-2xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm leading-6 text-amber-900">
-            Kategori, produk, transaksi, dan pengguna di panel ini menggunakan data demo lokal. Data asli di database tidak dibaca atau diubah.
-        </section>
-
         <section aria-labelledby="overview-heading">
             <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
                 <div>
@@ -68,7 +64,7 @@
                     <p class="mt-2 text-xs font-bold text-red-700">Kelola produk →</p>
                 </a>
                 <a href="{{ route('admin.transactions.index') }}" class="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-md">
-                    <p class="text-sm font-semibold text-slate-500">Transaksi demo</p>
+                    <p class="text-sm font-semibold text-slate-500">Transaksi</p>
                     <p class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">{{ number_format($transactionCount, 0, ',', '.') }}</p>
                     <p class="mt-2 text-xs font-bold text-red-700">Kelola transaksi →</p>
                 </a>
@@ -100,7 +96,7 @@
                         </svg>
                     </span>
                     <h3 class="mt-4 text-sm font-extrabold text-slate-800">Aktivitas akan muncul di sini</h3>
-                    <p class="mt-1.5 max-w-sm text-xs leading-5 text-slate-500">Kategori, produk, dan pengguna tersimpan di database. Transaksi masih menggunakan data demo.</p>
+                    <p class="mt-1.5 max-w-sm text-xs leading-5 text-slate-500">Kategori, produk, transaksi, dan pengguna tersimpan di database.</p>
                 </div>
             </div>
 
@@ -137,15 +133,15 @@
                         <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Aktif</span>
                     </li>
                     <li class="flex items-center gap-3">
-                        <span class="flex size-9 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
+                        <span class="flex size-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
                             <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4L19 6"/>
                                 <circle cx="12" cy="12" r="9"/>
-                                <path stroke-linecap="round" d="M12 7v5l3 2"/>
                             </svg>
                         </span>
                         <span class="min-w-0 flex-1">
                             <span class="block text-xs font-bold text-slate-800">Manajemen data</span>
-                            <span class="mt-0.5 block text-[11px] text-slate-400">Menggunakan berkas demo lokal</span>
+                            <span class="mt-0.5 block text-[11px] text-slate-400">Database aktif dan terhubung</span>
                         </span>
                         <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700">Aktif</span>
                     </li>

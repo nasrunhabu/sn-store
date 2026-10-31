@@ -23,6 +23,7 @@ it('creates products with uploaded images and shows active products in the store
             'name' => 'Headphone Baru',
             'category_id' => $category->id,
             'price' => 2500000,
+            'stock' => 8,
             'original_price' => 3000000,
             'badge' => 'Produk uji',
             'image' => UploadedFile::fake()->image('headphone.jpg'),
@@ -44,6 +45,7 @@ it('creates products with uploaded images and shows active products in the store
         'category_id' => $category->id,
         'image_path' => $product->image_path,
         'price' => 2500000,
+        'stock' => 8,
         'original_price' => 3000000,
         'is_active' => true,
     ]);
@@ -68,12 +70,13 @@ it('rejects invalid product category, price, and image input', function () {
             'name' => 'Produk Tidak Valid',
             'category_id' => 999,
             'price' => 0,
+            'stock' => -1,
             'badge' => 'Uji',
             'image' => UploadedFile::fake()->create('manual.pdf', 100, 'application/pdf'),
             'image_alt' => 'File yang bukan gambar',
         ])
         ->assertRedirect(route('admin.products.create'))
-        ->assertSessionHasErrors(['category_id', 'price', 'image']);
+        ->assertSessionHasErrors(['category_id', 'price', 'stock', 'image']);
 
     $this->assertDatabaseCount('products', 0);
     expect(Storage::disk('public')->allFiles('products'))->toBeEmpty();
@@ -105,6 +108,7 @@ it('keeps the existing image when editing without an upload and replaces it when
             'name' => 'Laptop Diperbarui',
             'category_id' => $category->id,
             'price' => 5500000,
+            'stock' => 12,
             'badge' => 'Terbaru',
             'image_alt' => 'Laptop terbaru',
             'is_active' => '1',
@@ -127,6 +131,7 @@ it('keeps the existing image when editing without an upload and replaces it when
         'name' => 'Laptop Diperbarui',
         'category_id' => $category->id,
         'price' => 5500000,
+        'stock' => 12,
         'badge' => 'Terbaru',
         'image' => UploadedFile::fake()->image('new.png'),
         'image_alt' => 'Laptop terbaru',
@@ -154,6 +159,7 @@ it('deletes a product and its locally stored image', function () {
         'category_id' => $category->id,
         'name' => 'Ponsel',
         'price' => 4000000,
+        'stock' => 5,
         'badge' => 'Baru',
         'image_path' => $imagePath,
         'image_alt' => 'Ponsel hitam',
@@ -187,6 +193,7 @@ it('renders SweetAlert success and delete confirmation on the product table', fu
         'category_id' => $category->id,
         'name' => 'Headphone Uji',
         'price' => 100000,
+        'stock' => 3,
         'badge' => 'Pilihan',
         'image_path' => 'products/sample.jpg',
         'image_alt' => 'Headphone uji',

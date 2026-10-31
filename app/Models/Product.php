@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Storage;
     'category_id',
     'name',
     'price',
+    'stock',
     'original_price',
     'rating',
     'reviews',
@@ -22,6 +24,8 @@ use Illuminate\Support\Facades\Storage;
 ])]
 class Product extends Model
 {
+    use HasFactory;
+
     /**
      * Get the attributes that should be cast.
      *
@@ -31,6 +35,7 @@ class Product extends Model
     {
         return [
             'price' => 'integer',
+            'stock' => 'integer',
             'original_price' => 'integer',
             'rating' => 'decimal:1',
             'reviews' => 'integer',

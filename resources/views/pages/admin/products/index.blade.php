@@ -26,6 +26,7 @@
                             <th scope="col" class="px-6 py-3">Produk</th>
                             <th scope="col" class="px-6 py-3">Kategori</th>
                             <th scope="col" class="px-6 py-3">Harga</th>
+                            <th scope="col" class="px-6 py-3">Stok</th>
                             <th scope="col" class="px-6 py-3">Status publik</th>
                             <th scope="col" class="px-6 py-3 text-right">Aksi</th>
                         </tr>
@@ -44,6 +45,7 @@
                                 </td>
                                 <td class="px-6 py-4 text-slate-600">{{ $product->category->name }}</td>
                                 <td class="px-6 py-4 font-semibold text-slate-800">Rp {{ number_format($product->price, 0, ',', '.') }}</td>
+                                <td class="px-6 py-4 font-semibold text-slate-800">{{ number_format($product->stock) }}</td>
                                 <td class="px-6 py-4">
                                     <span class="rounded-full px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider {{ $product->is_active ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-500' }}">
                                         {{ $product->is_active ? 'Tampil' : 'Disembunyikan' }}
@@ -62,7 +64,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center text-sm text-slate-500">Belum ada produk. Tambahkan produk pertama untuk ditampilkan di etalase.</td>
+                                <td colspan="6" class="px-6 py-12 text-center text-sm text-slate-500">Belum ada produk. Tambahkan produk pertama untuk ditampilkan di etalase.</td>
                             </tr>
                         @endforelse
                     </tbody>

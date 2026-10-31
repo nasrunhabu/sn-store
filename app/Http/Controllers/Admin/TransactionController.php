@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\DemoStore;
+use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Services\OrderService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -11,39 +13,39 @@ use Illuminate\View\View;
 
 class TransactionController extends Controller
 {
-    private const STATUSES = [
-        'Menunggu pembayaran',
-        'Diproses',
-        'Dikirim',
-        'Selesai',
-        'Dibatalkan',
-    ];
-
-    public function index(DemoStore $store): View
+    public function index(OrderService $orderService): View
     {
-        $transactions = collect($store->all()['transactions'])->sortByDesc('id')->values();
-
         return view('pages.admin.transactions.index', [
-            'transactions' => $transactions,
-            'statuses' => self::STATUSES,
+            'orders' => $orderService->getOrders(),
+            'statuses' => OrderStatus::cases(),
         ]);
     }
 
-    public function update(Request $request, string $transaction, DemoStore $store): RedirectResponse
+    public function edit(Order $order): View
+    {
+        return view('pages.admin.transactions.edit', [
+            'order' => $order->load(['user', 'items']),
+            'statuses' => OrderStatus::cases(),
+        ]);
+    }
+
+    public function update(Request $request, Order $order, OrderService $orderService): RedirectResponse
     {
         $validated = $request->validate([
-            'status' => ['required', Rule::in(self::STATUSES)],
+            'status' => ['required', Rule::enum(OrderStatus::class)],
         ]);
 
-        $store->update(function (array $data) use ($transaction, $validated): array {
-            $index = collect($data['transactions'])->search(fn (array $item): bool => $item['id'] === $transaction);
+        $updated = $orderService->updateStatus($order, OrderStatus::from($validated['status']));
 
-            abort_if($index === false, 404);
-            $data['transactions'][$index]['status'] = $validated['status'];
+        if (! $updated) {
+            return back()->withErrors([
+                'status' => 'Status pesanan tidak dapat diubah dari status saat ini.',
+            ]);
+        }
 
-            return $data;
-        });
-
-        return to_route('admin.transactions.index')->with('status', 'Status transaksi contoh berhasil diperbarui.');
+        return to_route('admin.transactions.index')->with(
+            'status',
+            "Status pesanan #{$order->order_number} berhasil diperbarui."
+        );
     }
 }

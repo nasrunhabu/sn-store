@@ -1,11 +1,13 @@
 <?php
 
+use App\Enums\OrderStatus;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
 use Illuminate\Support\Facades\Storage;
 
-it('updates demo transaction statuses and lists users from the database', function () {
+it('updates transaction statuses and lists users from the database', function () {
     Storage::fake('local');
     $this->seed(RolePermissionSeeder::class);
     $admin = User::factory()->create(['name' => 'Admin Asli', 'email' => 'admin@sn-store.test']);
@@ -16,17 +18,35 @@ it('updates demo transaction statuses and lists users from the database', functi
     ]);
     $customer->assignRole('Customer');
 
+    $order = Order::factory()->for($customer)->create([
+        'order_number' => 'ORD-TEST-001',
+        'status' => OrderStatus::Pending,
+    ]);
+
     $this->actingAs($admin)
-        ->put(route('admin.transactions.update', 'SN-2026-002'), ['status' => 'Status palsu'])
+        ->get(route('admin.transactions.index'))
+        ->assertOk()
+        ->assertSee(route('admin.transactions.edit', $order))
+        ->assertDontSee('name="status"', false);
+
+    $this->get(route('admin.transactions.edit', $order))
+        ->assertOk()
+        ->assertSee('Simpan perubahan');
+
+    $this->actingAs($admin)
+        ->put(route('admin.transactions.update', $order), ['status' => 'status-palsu'])
         ->assertSessionHasErrors('status');
 
     $this->actingAs($admin)
-        ->put(route('admin.transactions.update', 'SN-2026-002'), ['status' => 'Dikirim'])
+        ->put(route('admin.transactions.update', $order), ['status' => OrderStatus::Paid->value])
         ->assertRedirect(route('admin.transactions.index'));
+
+    expect($order->fresh()->status)->toBe(OrderStatus::Paid);
 
     $this->get(route('admin.transactions.index'))
         ->assertOk()
-        ->assertSee('value="Dikirim" selected', false);
+        ->assertSee('ORD-TEST-001')
+        ->assertSee('Pembayaran berhasil');
 
     $this->get(route('admin.users.index'))
         ->assertOk()

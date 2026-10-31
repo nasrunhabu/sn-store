@@ -36,6 +36,18 @@ class ProductService
     }
 
     /**
+     * @return array<int, string>
+     */
+    public function getPublicCategories(): array
+    {
+        return Category::query()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->pluck('name')
+            ->all();
+    }
+
+    /**
      * @param  array<string, mixed>  $filters
      * @return array{categories: array<int, string>, products: Collection<int, array<string, mixed>>}
      */
@@ -67,7 +79,9 @@ class ProductService
             ->orderBy('name')
             ->get()
             ->map(fn (Product $product): array => [
+                'id' => $product->id,
                 'name' => $product->name,
+                'stock' => $product->stock,
                 'category' => $product->category->name,
                 'image' => $product->image_url,
                 'image_alt' => $product->image_alt,

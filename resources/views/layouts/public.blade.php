@@ -33,7 +33,7 @@
 
                 <nav class="hidden items-center gap-7 text-sm font-semibold text-gray-600 xl:flex" aria-label="Navigasi utama">
                     <a href="{{ route('home') }}" class="text-red-700 transition hover:text-red-800">Beranda</a>
-                    <a href="{{ route('home') }}#produk" class="transition hover:text-red-700">Produk</a>
+                    <a href="{{ route('products.index') }}" class="transition hover:text-red-700">Produk</a>
                     <details class="group relative">
                         <summary class="flex cursor-pointer list-none items-center gap-1.5 transition hover:text-red-700">
                             Kategori
@@ -43,13 +43,16 @@
                         </summary>
                         <div class="absolute left-0 top-full z-50 mt-3 w-52 rounded-2xl border border-gray-100 bg-white p-2 shadow-xl shadow-gray-900/10">
                             @foreach ($categories as $category)
-                                <a href="{{ route('home', ['category' => $category]) }}#produk" class="block rounded-xl px-3 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-red-50 hover:text-red-700">{{ $category }}</a>
+                                <a href="{{ route('products.index', ['category' => $category]) }}" class="block rounded-xl px-3 py-2.5 text-sm font-medium text-gray-600 transition hover:bg-red-50 hover:text-red-700">{{ $category }}</a>
                             @endforeach
                         </div>
                     </details>
                 </nav>
 
-                <form action="{{ route('home') }}" method="GET" role="search" class="ml-auto hidden w-full max-w-sm items-center rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 focus-within:border-red-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-red-50 lg:flex xl:ml-0">
+                <form action="{{ route('products.index') }}" method="GET" role="search" class="ml-auto hidden w-full max-w-sm items-center rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 focus-within:border-red-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-red-50 lg:flex xl:ml-0">
+                    @if ($selectedCategory !== '')
+                        <input type="hidden" name="category" value="{{ $selectedCategory }}">
+                    @endif
                     <label for="desktop-search" class="sr-only">Cari produk</label>
                     <input id="desktop-search" type="search" name="search" value="{{ $searchTerm }}" placeholder="Cari gadget impianmu..." class="min-w-0 flex-1 border-0 bg-transparent p-0 text-sm text-gray-700 placeholder:text-gray-400 focus:ring-0">
                     <button type="submit" class="ml-2 text-gray-400 transition hover:text-red-700" aria-label="Cari">
@@ -74,6 +77,12 @@
                                 </svg>
                             </summary>
                             <div class="absolute right-0 top-full z-50 mt-2 w-56 rounded-2xl border border-gray-100 bg-white p-2 shadow-xl shadow-gray-900/10">
+                                <a href="{{ route('orders.index') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-red-50 hover:text-red-700">
+                                    <svg class="size-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                                    </svg>
+                                    Pesanan saya
+                                </a>
                                 <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-red-50 hover:text-red-700">
                                     <svg class="size-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                                         <circle cx="12" cy="8" r="3.5"/>
@@ -101,14 +110,14 @@
                         <a href="{{ route('register') }}" class="hidden rounded-full bg-red-700 px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-red-800 sm:inline-flex">Daftar</a>
                     @endauth
 
-                    <button type="button" class="relative flex size-10 items-center justify-center rounded-full bg-gray-50 text-gray-700 transition hover:bg-red-50 hover:text-red-700" aria-label="Keranjang belanja, 0 item">
+                    <a href="{{ route('cart.index') }}" class="relative flex size-10 items-center justify-center rounded-full bg-gray-50 text-gray-700 transition hover:bg-red-50 hover:text-red-700" aria-label="Keranjang belanja, {{ $cartQuantity }} item">
                         <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 4h2l2.1 10.1a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 1.9-1.4L21 8H6"/>
                             <circle cx="10" cy="20" r="1"/>
                             <circle cx="18" cy="20" r="1"/>
                         </svg>
-                        <span class="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-red-700 text-[10px] font-bold text-white">0</span>
-                    </button>
+                        <span class="absolute -right-1 -top-1 flex size-5 items-center justify-center rounded-full bg-red-700 text-[10px] font-bold text-white">{{ $cartQuantity }}</span>
+                    </a>
 
                     <button type="button" class="flex size-10 items-center justify-center rounded-full text-gray-700 transition hover:bg-gray-100 xl:hidden" @click="mobileMenuOpen = !mobileMenuOpen" :aria-expanded="mobileMenuOpen.toString()" aria-controls="mobile-navigation" aria-label="Buka menu">
                         <svg x-show="!mobileMenuOpen" class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
@@ -122,7 +131,10 @@
             </div>
 
             <div class="mx-auto max-w-7xl px-4 pb-4 sm:px-6 lg:px-8 lg:hidden">
-                <form action="{{ route('home') }}" method="GET" role="search" class="flex items-center rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 focus-within:border-red-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-red-50">
+                <form action="{{ route('products.index') }}" method="GET" role="search" class="flex items-center rounded-full border border-gray-200 bg-gray-50 px-4 py-2.5 focus-within:border-red-300 focus-within:bg-white focus-within:ring-4 focus-within:ring-red-50">
+                    @if ($selectedCategory !== '')
+                        <input type="hidden" name="category" value="{{ $selectedCategory }}">
+                    @endif
                     <label for="mobile-search" class="sr-only">Cari produk</label>
                     <input id="mobile-search" type="search" name="search" value="{{ $searchTerm }}" placeholder="Cari gadget impianmu..." class="min-w-0 flex-1 border-0 bg-transparent p-0 text-sm text-gray-700 placeholder:text-gray-400 focus:ring-0">
                     <button type="submit" class="ml-2 text-gray-400 transition hover:text-red-700" aria-label="Cari">
@@ -137,13 +149,15 @@
             <nav id="mobile-navigation" x-show="mobileMenuOpen" x-cloak x-transition.origin.top aria-label="Navigasi seluler" class="border-t border-gray-100 bg-white px-4 py-3 xl:hidden">
                 <div class="mx-auto flex max-w-7xl flex-col gap-1 sm:px-2">
                     <a href="{{ route('home') }}" class="rounded-xl px-3 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-50">Beranda</a>
-                    <a href="{{ route('home') }}#produk" class="rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50">Produk</a>
+                    <a href="{{ route('products.index') }}" class="rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50">Produk</a>
+                    <a href="{{ route('cart.index') }}" class="rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50">Keranjang ({{ $cartQuantity }})</a>
                     <span class="px-3 pb-1 pt-3 text-xs font-bold uppercase tracking-wider text-gray-400">Kategori</span>
                     @foreach ($categories as $category)
-                        <a href="{{ route('home', ['category' => $category]) }}#produk" class="rounded-xl px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-700">{{ $category }}</a>
+                        <a href="{{ route('products.index', ['category' => $category]) }}" class="rounded-xl px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-700">{{ $category }}</a>
                     @endforeach
                     @auth
                         <span class="px-3 pb-1 pt-3 text-xs font-bold uppercase tracking-wider text-gray-400">Akun</span>
+                        <a href="{{ route('orders.index') }}" class="rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 hover:bg-red-50 hover:text-red-700">Pesanan saya</a>
                         <a href="{{ route('profile.edit') }}" class="rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 hover:bg-red-50 hover:text-red-700">Pengaturan profil</a>
                         @if (auth()->user()->canAccessAdminPanel())
                             <a href="{{ route('dashboard') }}" class="mt-2 rounded-xl bg-red-700 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-red-800">Dashboard</a>
@@ -187,9 +201,9 @@
                     <h2 class="text-sm font-extrabold text-gray-950">Jelajahi</h2>
                     <ul class="mt-4 space-y-3 text-sm text-gray-500">
                         <li><a href="{{ route('home') }}" class="transition hover:text-red-700">Beranda</a></li>
-                        <li><a href="{{ route('home') }}#produk" class="transition hover:text-red-700">Semua produk</a></li>
+                        <li><a href="{{ route('products.index') }}" class="transition hover:text-red-700">Semua produk</a></li>
                         @foreach ($categories as $category)
-                            <li><a href="{{ route('home', ['category' => $category]) }}#produk" class="transition hover:text-red-700">{{ $category }}</a></li>
+                            <li><a href="{{ route('products.index', ['category' => $category]) }}" class="transition hover:text-red-700">{{ $category }}</a></li>
                         @endforeach
                     </ul>
                 </div>

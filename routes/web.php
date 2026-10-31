@@ -1,27 +1,46 @@
 <?php
 
-use App\DemoStore;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\MidtransNotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicHomeController;
+use App\Http\Controllers\PublicProductController;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', PublicHomeController::class)->name('home');
+Route::get('/produk', PublicProductController::class)->name('products.index');
 
-Route::get('/dashboard', function (DemoStore $store) {
-    $data = $store->all();
+Route::middleware('auth')->group(function (): void {
+    Route::get('/keranjang', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/keranjang/produk/{product}', [CartController::class, 'store'])->name('cart.items.store');
+    Route::patch('/keranjang/{cartItem}', [CartController::class, 'update'])->name('cart.items.update');
+    Route::delete('/keranjang/{cartItem}', [CartController::class, 'destroy'])->name('cart.items.destroy');
 
+    Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    Route::get('/transaksi', [CheckoutController::class, 'index'])->name('orders.index');
+    Route::get('/transaksi/{order}', [CheckoutController::class, 'show'])->name('orders.show');
+    Route::post('/transaksi/{order}/batal', [CheckoutController::class, 'cancel'])->name('orders.cancel');
+    Route::post('/transaksi/{order}/cek-status', [CheckoutController::class, 'checkStatus'])->name('orders.check-status');
+});
+
+Route::post('/midtrans/notification', MidtransNotificationController::class)->name('midtrans.notification');
+
+Route::get('/dashboard', function () {
     return view('pages.admin.dashboard.index', [
         'categoryCount' => Category::query()->count(),
         'productCount' => Product::query()->count(),
-        'transactionCount' => count($data['transactions']),
+        'transactionCount' => Order::query()->count(),
         'userCount' => User::query()->count(),
     ]);
 })->middleware(['auth', 'verified', 'role:Super Admin|Admin'])->name('dashboard');
@@ -45,7 +64,8 @@ Route::middleware(['auth', 'verified', 'role:Super Admin|Admin'])
         Route::delete('/produk/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
         Route::get('/transaksi', [TransactionController::class, 'index'])->name('transactions.index');
-        Route::put('/transaksi/{transaction}', [TransactionController::class, 'update'])->name('transactions.update');
+        Route::get('/transaksi/{order}/edit', [TransactionController::class, 'edit'])->name('transactions.edit');
+        Route::put('/transaksi/{order}', [TransactionController::class, 'update'])->name('transactions.update');
 
         Route::get('/pengguna', [UserController::class, 'index'])->name('users.index');
 

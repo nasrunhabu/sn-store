@@ -67,6 +67,11 @@
                     @error('price')<p class="mt-1 text-xs text-red-700">{{ $message }}</p>@enderror
                 </div>
                 <div>
+                    <label for="stock" class="mb-2 block text-sm font-bold text-slate-700">Stok tersedia</label>
+                    <input id="stock" name="stock" type="number" min="0" step="1" value="{{ old('stock', $product?->stock ?? 0) }}" required class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500">
+                    @error('stock')<p class="mt-1 text-xs text-red-700">{{ $message }}</p>@enderror
+                </div>
+                <div>
                     <label for="original_price" class="mb-2 block text-sm font-bold text-slate-700">Harga sebelum diskon (opsional)</label>
                     <input id="original_price" name="original_price" type="number" min="1" step="1" value="{{ old('original_price', $product?->original_price ?? '') }}" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-red-500 focus:ring-red-500">
                     @error('original_price')<p class="mt-1 text-xs text-red-700">{{ $message }}</p>@enderror
