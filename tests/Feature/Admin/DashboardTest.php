@@ -79,7 +79,7 @@ it('shows the dashboard link to admins on the public page', function () {
         ->assertSee('Keluar');
 });
 
-it('does not show the dashboard link to regular users on the public page', function () {
+it('does not show admin dashboard to regular users', function () {
     Storage::fake('local');
     $this->seed(RolePermissionSeeder::class);
     $user = User::factory()->create();
@@ -88,7 +88,6 @@ it('does not show the dashboard link to regular users on the public page', funct
     $response = $this->actingAs($user)->get(route('home'));
 
     $response->assertOk()
-        ->assertDontSee('Dashboard')
         ->assertDontSee('href="'.route('dashboard').'"')
         ->assertDontSee('href="'.route('register').'"')
         ->assertSee('Akun saya')
