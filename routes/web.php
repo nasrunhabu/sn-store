@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\HeroSlideController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TransactionController;
@@ -11,6 +12,8 @@ use App\Http\Controllers\MidtransNotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicHomeController;
 use App\Http\Controllers\PublicProductController;
+use App\Http\Controllers\RegionController;
+use App\Http\Controllers\ShippingCostController;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
@@ -26,6 +29,11 @@ Route::middleware('auth')->group(function (): void {
     Route::patch('/keranjang/{cartItem}', [CartController::class, 'update'])->name('cart.items.update');
     Route::delete('/keranjang/{cartItem}', [CartController::class, 'destroy'])->name('cart.items.destroy');
 
+    Route::get('/wilayah/provinsi/{province}/kabupaten', [RegionController::class, 'cities'])->name('regions.cities');
+    Route::get('/wilayah/kabupaten/{city}/kecamatan', [RegionController::class, 'districts'])->name('regions.districts');
+    Route::get('/wilayah/kecamatan/{district}/desa', [RegionController::class, 'villages'])->name('regions.villages');
+
+    Route::get('/checkout/ongkir', ShippingCostController::class)->middleware('throttle:30,1')->name('checkout.shipping-cost');
     Route::get('/checkout', [CheckoutController::class, 'create'])->name('checkout.create');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/transaksi', [CheckoutController::class, 'index'])->name('orders.index');
@@ -64,8 +72,17 @@ Route::middleware(['auth', 'verified', 'role:Super Admin|Admin'])
         Route::delete('/produk/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
         Route::get('/transaksi', [TransactionController::class, 'index'])->name('transactions.index');
+        Route::get('/transaksi/{order}', [TransactionController::class, 'show'])->name('transactions.show');
         Route::get('/transaksi/{order}/edit', [TransactionController::class, 'edit'])->name('transactions.edit');
         Route::put('/transaksi/{order}', [TransactionController::class, 'update'])->name('transactions.update');
+
+        Route::get('/hero', [HeroSlideController::class, 'index'])->name('hero-slides.index');
+        Route::get('/hero/tambah', [HeroSlideController::class, 'create'])->name('hero-slides.create');
+        Route::post('/hero', [HeroSlideController::class, 'store'])->name('hero-slides.store');
+        Route::get('/hero/{heroSlide}/edit', [HeroSlideController::class, 'edit'])->name('hero-slides.edit');
+        Route::put('/hero/{heroSlide}', [HeroSlideController::class, 'update'])->name('hero-slides.update');
+        Route::patch('/hero/{heroSlide}/status', [HeroSlideController::class, 'toggle'])->name('hero-slides.toggle');
+        Route::delete('/hero/{heroSlide}', [HeroSlideController::class, 'destroy'])->name('hero-slides.destroy');
 
         Route::get('/pengguna', [UserController::class, 'index'])->name('users.index');
 

@@ -29,6 +29,18 @@ it('updates transaction statuses and lists users from the database', function ()
         ->assertSee(route('admin.transactions.edit', $order))
         ->assertDontSee('name="status"', false);
 
+    $order->items()->create([
+        'product_name' => 'Produk Detail',
+        'quantity' => 2,
+        'unit_price' => 50000,
+        'subtotal' => 100000,
+    ]);
+    $this->get(route('admin.transactions.show', $order))
+        ->assertOk()
+        ->assertSee('ORD-TEST-001')
+        ->assertSee('Produk Detail')
+        ->assertSee('Pelanggan Database');
+
     $this->get(route('admin.transactions.edit', $order))
         ->assertOk()
         ->assertSee('Simpan perubahan');

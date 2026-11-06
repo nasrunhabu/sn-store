@@ -16,8 +16,13 @@ use Illuminate\Validation\ValidationException;
 class OrderService
 {
     /**
-     * @param  array{recipient_name: string, recipient_phone: string, shipping_address: string}  $shipping
+     * @param  array<string, string|int|null>  $shipping
      */
+    private function shippingWeight(int $quantity): int
+    {
+        return app(RajaOngkirService::class)->weightForQuantity($quantity);
+    }
+
     public function checkout(User $user, array $shipping): Order
     {
         return DB::transaction(function () use ($user, $shipping): Order {
@@ -72,6 +77,14 @@ class OrderService
                 ];
                 $total += $subtotal;
             }
+
+            if (isset($shipping['shipping_weight']) && (int) $shipping['shipping_weight'] !== $this->shippingWeight($cartItems->sum('quantity'))) {
+                throw ValidationException::withMessages([
+                    'shipping_option' => 'Isi keranjang berubah. Hitung ulang ongkos kirim.',
+                ]);
+            }
+
+            $total += (int) ($shipping['shipping_cost'] ?? 0);
 
             $order = Order::create([
                 'user_id' => $user->getKey(),

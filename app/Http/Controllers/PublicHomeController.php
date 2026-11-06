@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\CartService;
+use App\Services\HeroSlideService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,6 +15,7 @@ class PublicHomeController extends Controller
         Request $request,
         ProductService $productService,
         CartService $cartService,
+        HeroSlideService $heroSlideService,
     ): View {
         $filters = $request->validate([
             'search' => ['nullable', 'string', 'max:100'],
@@ -23,6 +25,7 @@ class PublicHomeController extends Controller
         $user = $request->user();
 
         return view('pages.public.home', [
+            'heroSlides' => $heroSlideService->getActiveSlides(),
             'categories' => $catalog['categories'],
             'products' => $catalog['products'],
             'searchTerm' => trim($filters['search'] ?? ''),

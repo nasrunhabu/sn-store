@@ -97,6 +97,40 @@ class CartService
             ->get();
     }
 
+    /**
+     * @return array{
+     *     items: array<int, array{id: int, quantity: int, unit_price: int, subtotal: int, product: array<string, mixed>}>,
+     *     total_quantity: int,
+     *     total_price: int
+     * }
+     */
+    public function getApiCart(User $user): array
+    {
+        $items = $this->getItems($user);
+
+        return [
+            'items' => $items
+                ->map(function (CartItem $item): array {
+                    $product = $item->product->attributesToArray();
+                    unset($product['category_id']);
+                    $product['category'] = $item->product->category->name;
+
+                    return [
+                        'id' => $item->id,
+                        'quantity' => $item->quantity,
+                        'unit_price' => $item->product->price,
+                        'subtotal' => $item->product->price * $item->quantity,
+                        'product' => $product,
+                    ];
+                })
+                ->all(),
+            'total_quantity' => (int) $items->sum('quantity'),
+            'total_price' => (int) $items->sum(
+                fn (CartItem $item): int => $item->product->price * $item->quantity,
+            ),
+        ];
+    }
+
     public function getQuantity(User $user): int
     {
         return (int) $user->cartItems()->sum('quantity');

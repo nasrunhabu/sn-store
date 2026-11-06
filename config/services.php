@@ -42,4 +42,15 @@ return [
         'is_production' => (bool) env('MIDTRANS_IS_PRODUCTION', false),
     ],
 
+    'rajaongkir' => [
+        'api_key' => env('RAJAONGKIR_API_KEY'),
+        'base_url' => env('RAJAONGKIR_BASE_URL', 'https://rajaongkir.komerce.id/api/v1'),
+        // ID tujuan RajaOngkir untuk asal pengiriman (default: Kota Makassar).
+        'origin_id' => (int) env('RAJAONGKIR_ORIGIN_ID', 79234),
+        'origin_label' => env('RAJAONGKIR_ORIGIN_LABEL', 'Kota Makassar'),
+        'couriers' => env('RAJAONGKIR_COURIERS', 'jne:sicepat:jnt'),
+        // Berat per unit produk dalam gram (produk belum memiliki data berat).
+        'item_weight' => (int) env('RAJAONGKIR_ITEM_WEIGHT', 1000),
+    ],
+
 ];

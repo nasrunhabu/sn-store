@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $testUser->assignRole('Customer');
 
         $this->call(SuperAdminSeeder::class);
+        $this->call(HeroSlideSeeder::class);
     }
 }

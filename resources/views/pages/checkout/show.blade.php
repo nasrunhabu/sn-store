@@ -92,7 +92,7 @@
             <div class="mt-6 rounded-2xl border border-gray-100 p-4 sm:p-5">
                 <h2 class="text-xs font-extrabold uppercase tracking-wider text-gray-400">Alamat Pengiriman</h2>
                 <p class="mt-2 text-sm font-bold text-gray-900">{{ $order->recipient_name }} <span class="font-normal text-gray-500">({{ $order->recipient_phone }})</span></p>
-                <p class="mt-1 text-xs leading-5 text-gray-600">{{ $order->shipping_address }}</p>
+                <p class="mt-1 text-xs leading-5 text-gray-600">{{ $order->full_shipping_address }}</p>
             </div>
 
             <h2 class="mt-7 text-sm font-extrabold text-gray-900">Detail produk</h2>
@@ -114,6 +114,19 @@
                     </div>
                 @endforeach
             </div>
+
+            @if ($order->shipping_cost > 0)
+                <div class="mt-4 space-y-1.5 border-t border-gray-100 pt-4 text-sm text-gray-600">
+                    <div class="flex justify-between gap-4">
+                        <span>Subtotal produk</span>
+                        <span class="font-semibold">Rp {{ number_format($order->items_subtotal, 0, ',', '.') }}</span>
+                    </div>
+                    <div class="flex justify-between gap-4">
+                        <span>Ongkos kirim ({{ $order->shipping_label }}@if ($order->shipping_etd), {{ $order->shipping_etd }}@endif)</span>
+                        <span class="font-semibold">Rp {{ number_format($order->shipping_cost, 0, ',', '.') }}</span>
+                    </div>
+                </div>
+            @endif
 
             <div class="mt-5 flex justify-between gap-4 border-t border-gray-100 pt-4">
                 <span class="font-bold text-gray-600">Total pesanan</span>

@@ -26,6 +26,36 @@ class ProductService
     }
 
     /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function getPublicProducts(): array
+    {
+        return Product::query()
+            ->with('category:id,name')
+            ->where('is_active', true)
+            ->whereHas('category', fn ($query) => $query->where('is_active', true))
+            ->orderBy('name')
+            ->orderBy('id')
+            ->get()
+            ->map(fn (Product $product): array => $this->transformPublicProduct($product))
+            ->all();
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getPublicProduct(int $productId): ?array
+    {
+        $product = Product::query()
+            ->with('category:id,name')
+            ->where('is_active', true)
+            ->whereHas('category', fn ($query) => $query->where('is_active', true))
+            ->find($productId);
+
+        return $product === null ? null : $this->transformPublicProduct($product);
+    }
+
+    /**
      * @return Collection<int, Category>
      */
     public function getCategories(): Collection
@@ -98,6 +128,18 @@ class ProductService
             'categories' => $categories->pluck('name')->all(),
             'products' => $products,
         ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function transformPublicProduct(Product $product): array
+    {
+        $attributes = $product->attributesToArray();
+        unset($attributes['category_id']);
+        $attributes['category'] = $product->category->name;
+
+        return $attributes;
     }
 
     /**

@@ -5,72 +5,56 @@
 
 @section('content')
     <div class="bg-gray-50">
-        <section class="mx-auto max-w-7xl px-4 pb-8 pt-7 sm:px-6 sm:pt-10 lg:px-8" aria-label="Promo pilihan">
-            <div class="relative overflow-hidden rounded-[2rem] bg-red-950 text-white shadow-2xl shadow-red-900/10" x-data="{ activeSlide: 0 }">
-                <div x-show="activeSlide === 0" x-transition.opacity class="relative isolate min-h-[420px] overflow-hidden sm:min-h-[460px]">
-                    <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=1800&q=90" alt="" class="absolute inset-y-0 right-0 h-full w-full object-cover object-center sm:w-3/4" fetchpriority="high">
-                    <div class="absolute inset-0 bg-gradient-to-r from-red-950 via-red-950/90 to-red-950/20"></div>
-                    <div class="relative flex min-h-[420px] max-w-2xl flex-col items-start justify-center px-7 py-12 sm:min-h-[460px] sm:px-12 lg:px-16">
-                        <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-red-100 backdrop-blur">
-                            <span class="size-1.5 rounded-full bg-red-300"></span>
-                            Teknologi, tanpa kompromi
-                        </span>
-                        <h1 class="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">Upgrade harimu,<br><span class="text-red-300">mulai dari sini.</span></h1>
-                        <p class="mt-5 max-w-lg text-sm leading-7 text-red-50/85 sm:text-base">Temukan gadget pilihan yang pas untuk kerja, berkarya, dan menikmati setiap momen.</p>
-                        <a href="#produk" class="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-extrabold text-red-800 shadow-lg shadow-red-950/20 transition hover:-translate-y-0.5 hover:bg-red-50">
-                            Belanja sekarang
-                            <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.69L10.22 5.03a.75.75 0 1 1 1.06-1.06l5.5 5.5a.75.75 0 0 1 0 1.06l-5.5 5.5a.75.75 0 1 1-1.06-1.06l4.22-4.22H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
+        @if ($heroSlides->isNotEmpty())
+            @php $slideCount = $heroSlides->count(); @endphp
+            <section class="mx-auto max-w-7xl px-4 pb-8 pt-7 sm:px-6 sm:pt-10 lg:px-8" aria-label="Promo pilihan">
+                <div class="relative overflow-hidden rounded-[2rem] bg-red-950 text-white shadow-2xl shadow-red-900/10" x-data="{ activeSlide: 0, total: {{ $slideCount }} }">
+                    @foreach ($heroSlides as $slide)
+                        <div x-show="activeSlide === {{ $loop->index }}" @unless ($loop->first) x-cloak @endunless x-transition.opacity class="relative isolate min-h-[420px] overflow-hidden sm:min-h-[460px]">
+                            <img src="{{ $slide->image_url }}" alt="" class="absolute inset-y-0 right-0 h-full w-full object-cover object-center sm:w-3/4" @if ($loop->first) fetchpriority="high" @endif>
+                            <div class="absolute inset-0 bg-gradient-to-r from-red-950 via-red-950/90 to-red-950/20"></div>
+                            <div class="relative flex min-h-[420px] max-w-2xl flex-col items-start justify-center px-7 py-12 sm:min-h-[460px] sm:px-12 lg:px-16">
+                                @if ($slide->badge)
+                                    <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-red-100 backdrop-blur">{{ $slide->badge }}</span>
+                                @endif
+                                @if ($loop->first)
+                                    <h1 class="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">{{ $slide->title }}@if ($slide->highlight)<br><span class="text-red-300">{{ $slide->highlight }}</span>@endif</h1>
+                                @else
+                                    <h2 class="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">{{ $slide->title }}@if ($slide->highlight)<br><span class="text-red-300">{{ $slide->highlight }}</span>@endif</h2>
+                                @endif
+                                @if ($slide->description)
+                                    <p class="mt-5 max-w-lg text-sm leading-7 text-red-50/85 sm:text-base">{{ $slide->description }}</p>
+                                @endif
+                                @if ($slide->button_text && $slide->button_url)
+                                    <a href="{{ $slide->button_url }}" class="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-extrabold text-red-800 shadow-lg shadow-red-950/20 transition hover:-translate-y-0.5 hover:bg-red-50">
+                                        {{ $slide->button_text }}
+                                        <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.69L10.22 5.03a.75.75 0 1 1 1.06-1.06l5.5 5.5a.75.75 0 0 1 0 1.06l-5.5 5.5a.75.75 0 1 1-1.06-1.06l4.22-4.22H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/></svg>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
 
-                <div x-show="activeSlide === 1" x-cloak x-transition.opacity class="relative isolate min-h-[420px] overflow-hidden sm:min-h-[460px]">
-                    <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=1800&q=90" alt="" class="absolute inset-y-0 right-0 h-full w-full object-cover object-center sm:w-3/4">
-                    <div class="absolute inset-0 bg-gradient-to-r from-red-950 via-red-950/90 to-red-950/20"></div>
-                    <div class="relative flex min-h-[420px] max-w-2xl flex-col items-start justify-center px-7 py-12 sm:min-h-[460px] sm:px-12 lg:px-16">
-                        <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-red-100 backdrop-blur">Siap untuk produktif</span>
-                        <h2 class="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">Kerja lebih fokus,<br><span class="text-red-300">ide makin lancar.</span></h2>
-                        <p class="mt-5 max-w-lg text-sm leading-7 text-red-50/85 sm:text-base">Laptop dan aksesori andalan untuk mendukung setiap target besarmu.</p>
-                        <a href="{{ route('home') }}#produk" class="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-extrabold text-red-800 shadow-lg transition hover:-translate-y-0.5 hover:bg-red-50">
-                            Jelajahi produk
-                            <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.69L10.22 5.03a.75.75 0 1 1 1.06-1.06l5.5 5.5a.75.75 0 0 1 0 1.06l-5.5 5.5a.75.75 0 1 1-1.06-1.06l4.22-4.22H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/></svg>
-                        </a>
-                    </div>
+                    @if ($slideCount > 1)
+                        <div class="absolute inset-x-7 bottom-6 flex items-center justify-between sm:inset-x-12 lg:inset-x-16">
+                            <div class="flex items-center gap-2" aria-label="Pilih slide">
+                                @foreach ($heroSlides as $slide)
+                                    <button type="button" @click="activeSlide = {{ $loop->index }}" :aria-current="activeSlide === {{ $loop->index }} ? 'true' : 'false'" class="h-2 rounded-full bg-white/40 transition-all aria-[current=true]:w-8 aria-[current=true]:bg-white" aria-label="Slide {{ $loop->iteration }}"></button>
+                                @endforeach
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="button" @click="activeSlide = (activeSlide + total - 1) % total" class="flex size-9 items-center justify-center rounded-full border border-white/25 text-white transition hover:bg-white/15" aria-label="Promo sebelumnya">
+                                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16 10a.75.75 0 0 1-.75.75H4.56l4.22 4.22a.75.75 0 1 1-1.06 1.06l-5.5-5.5a.75.75 0 0 1 0-1.06l5.5-5.5a.75.75 0 1 1 1.06 1.06L4.56 9.25h10.69A.75.75 0 0 1 16 10Z" clip-rule="evenodd"/></svg>
+                                </button>
+                                <button type="button" @click="activeSlide = (activeSlide + 1) % total" class="flex size-9 items-center justify-center rounded-full border border-white/25 text-white transition hover:bg-white/15" aria-label="Promo berikutnya">
+                                    <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M4 10a.75.75 0 0 1 .75-.75h10.69l-4.22-4.22a.75.75 0 1 1 1.06-1.06l5.5 5.5a.75.75 0 0 1 0 1.06l-5.5 5.5a.75.75 0 1 1-1.06-1.06l4.22-4.22H4.75A.75.75 0 0 1 4 10Z" clip-rule="evenodd"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    @endif
                 </div>
-
-                <div x-show="activeSlide === 2" x-cloak x-transition.opacity class="relative isolate min-h-[420px] overflow-hidden sm:min-h-[460px]">
-                    <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?auto=format&fit=crop&w=1800&q=90" alt="" class="absolute inset-y-0 right-0 h-full w-full object-cover object-center sm:w-3/4">
-                    <div class="absolute inset-0 bg-gradient-to-r from-red-950 via-red-950/90 to-red-950/20"></div>
-                    <div class="relative flex min-h-[420px] max-w-2xl flex-col items-start justify-center px-7 py-12 sm:min-h-[460px] sm:px-12 lg:px-16">
-                        <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-red-100 backdrop-blur">Pilihan minggu ini</span>
-                        <h2 class="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">Teknologi hebat,<br><span class="text-red-300">harga bersahabat.</span></h2>
-                        <p class="mt-5 max-w-lg text-sm leading-7 text-red-50/85 sm:text-base">Nikmati promo spesial untuk perangkat favoritmu. Belanja nyaman, tanpa khawatir.</p>
-                        <a href="#produk" class="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-extrabold text-red-800 shadow-lg transition hover:-translate-y-0.5 hover:bg-red-50">
-                            Lihat produk
-                            <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.69L10.22 5.03a.75.75 0 1 1 1.06-1.06l5.5 5.5a.75.75 0 0 1 0 1.06l-5.5 5.5a.75.75 0 1 1-1.06-1.06l4.22-4.22H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/></svg>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="absolute inset-x-7 bottom-6 flex items-center justify-between sm:inset-x-12 lg:inset-x-16">
-                    <div class="flex items-center gap-2" aria-label="Pilih slide">
-                        <button type="button" @click="activeSlide = 0" :aria-current="activeSlide === 0 ? 'true' : 'false'" class="h-2 rounded-full bg-white/40 transition-all aria-[current=true]:w-8 aria-[current=true]:bg-white" aria-label="Slide 1"></button>
-                        <button type="button" @click="activeSlide = 1" :aria-current="activeSlide === 1 ? 'true' : 'false'" class="h-2 rounded-full bg-white/40 transition-all aria-[current=true]:w-8 aria-[current=true]:bg-white" aria-label="Slide 2"></button>
-                        <button type="button" @click="activeSlide = 2" :aria-current="activeSlide === 2 ? 'true' : 'false'" class="h-2 rounded-full bg-white/40 transition-all aria-[current=true]:w-8 aria-[current=true]:bg-white" aria-label="Slide 3"></button>
-                    </div>
-                    <div class="flex gap-2">
-                        <button type="button" @click="activeSlide = (activeSlide + 2) % 3" class="flex size-9 items-center justify-center rounded-full border border-white/25 text-white transition hover:bg-white/15" aria-label="Promo sebelumnya">
-                            <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16 10a.75.75 0 0 1-.75.75H4.56l4.22 4.22a.75.75 0 1 1-1.06 1.06l-5.5-5.5a.75.75 0 0 1 0-1.06l5.5-5.5a.75.75 0 1 1 1.06 1.06L4.56 9.25h10.69A.75.75 0 0 1 16 10Z" clip-rule="evenodd"/></svg>
-                        </button>
-                        <button type="button" @click="activeSlide = (activeSlide + 1) % 3" class="flex size-9 items-center justify-center rounded-full border border-white/25 text-white transition hover:bg-white/15" aria-label="Promo berikutnya">
-                            <svg class="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M4 10a.75.75 0 0 1 .75-.75h10.69l-4.22-4.22a.75.75 0 1 1 1.06-1.06l5.5 5.5a.75.75 0 0 1 0 1.06l-5.5 5.5a.75.75 0 1 1-1.06-1.06l4.22-4.22H4.75A.75.75 0 0 1 4 10Z" clip-rule="evenodd"/></svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
+        @endif
 
         <section class="mx-auto grid max-w-7xl grid-cols-2 gap-5 px-4 pb-10 sm:grid-cols-4 sm:px-6 lg:px-8" aria-label="Keunggulan SN Store">
             <div class="flex items-center gap-3 rounded-2xl bg-white px-4 py-4 shadow-sm shadow-gray-900/[0.03]">

@@ -61,6 +61,15 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="{{ route('admin.hero-slides.index') }}" @if (request()->routeIs('admin.hero-slides.*')) aria-current="page" @endif @click="sidebarOpen = false" class="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition {{ request()->routeIs('admin.hero-slides.*') ? 'bg-white font-bold text-red-900 shadow-lg shadow-black/10' : 'text-red-100/75 hover:bg-white/10 hover:text-white' }}">
+                                    <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                                        <rect x="3" y="4" width="18" height="12" rx="2"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 20h8M12 16v4"/>
+                                    </svg>
+                                    <span class="flex-1">Hero</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('admin.categories.index') }}" @if (request()->routeIs('admin.categories.*')) aria-current="page" @endif @click="sidebarOpen = false" class="flex items-center gap-3 rounded-xl px-3.5 py-3 text-sm font-semibold transition {{ request()->routeIs('admin.categories.*') ? 'bg-white font-bold text-red-900 shadow-lg shadow-black/10' : 'text-red-100/75 hover:bg-white/10 hover:text-white' }}">
                                     <svg class="size-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5v-9Z"/>

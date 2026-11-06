@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use Database\Seeders\RolePermissionSeeder;
@@ -106,4 +107,11 @@ it('shows a login link to guests on the public page', function () {
         ->assertSee(route('login'))
         ->assertSee('Daftar')
         ->assertSee(route('register'));
+});
+
+it('forbids customers from viewing admin transaction details', function () {
+    $customer = User::factory()->create();
+    $order = Order::factory()->create();
+
+    $this->actingAs($customer)->get(route('admin.transactions.show', $order))->assertForbidden();
 });

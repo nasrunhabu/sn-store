@@ -76,6 +76,7 @@
                                     <span class="inline-flex rounded-full px-2.5 py-1 text-xs font-bold {{ $badge }}">{{ $order->status->label() }}</span>
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4 text-right">
+                                    <a href="{{ route('admin.transactions.show', $order) }}" class="mr-1 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-bold text-slate-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-800">Detail</a>
                                     <a href="{{ route('admin.transactions.edit', $order) }}" class="rounded-lg bg-red-800 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-red-900">Edit</a>
                                 </td>
                             </tr>

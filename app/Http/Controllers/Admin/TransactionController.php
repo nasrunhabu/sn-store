@@ -21,6 +21,13 @@ class TransactionController extends Controller
         ]);
     }
 
+    public function show(Order $order): View
+    {
+        return view('pages.admin.transactions.show', [
+            'order' => $order->load(['user', 'items']),
+        ]);
+    }
+
     public function edit(Order $order): View
     {
         return view('pages.admin.transactions.edit', [

@@ -110,6 +110,15 @@ class MidtransService
             ];
         })->values()->all();
 
+        if ((int) $order->shipping_cost > 0) {
+            $itemDetails[] = [
+                'id' => 'SHIPPING',
+                'price' => (int) $order->shipping_cost,
+                'quantity' => 1,
+                'name' => mb_substr('Ongkos kirim '.$order->shipping_label, 0, 50),
+            ];
+        }
+
         $itemsTotal = array_sum(array_map(fn (array $i): int => (int) $i['price'] * (int) $i['quantity'], $itemDetails));
         $grossAmount = (int) $order->total;
 
@@ -133,7 +142,7 @@ class MidtransService
                 'shipping_address' => [
                     'first_name' => $order->recipient_name,
                     'phone' => $order->recipient_phone,
-                    'address' => $order->shipping_address,
+                    'address' => $order->full_shipping_address,
                 ],
             ],
             'item_details' => $itemDetails,

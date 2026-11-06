@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Enums\OrderStatus;
+use App\Http\Requests\CheckoutRequest;
 use App\Models\Order;
 use App\Services\CartService;
 use App\Services\MidtransService;
 use App\Services\OrderService;
+use App\Services\RajaOngkirService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Laravolt\Indonesia\Models\Province;
+use RuntimeException;
 
 class CheckoutController extends Controller
 {
@@ -34,20 +39,27 @@ class CheckoutController extends Controller
             'items' => $items,
             'total' => $items->sum(fn ($item): int => $item->product->price * $item->quantity),
             'user' => $request->user(),
+            'provinces' => Province::query()->orderBy('name')->get(['code', 'name']),
         ]);
     }
 
     public function store(
-        Request $request,
+        CheckoutRequest $request,
         OrderService $orderService,
         MidtransService $midtransService,
+        CartService $cartService,
+        RajaOngkirService $rajaOngkir,
     ): RedirectResponse {
-        $shipping = $request->validate([
-            'recipient_name' => ['required', 'string', 'max:120'],
-            'recipient_phone' => ['required', 'string', 'max:30'],
-            'shipping_address' => ['required', 'string', 'max:2000'],
+        $weight = $rajaOngkir->weightForQuantity($cartService->getQuantity($request->user()));
+        $option = $this->resolveShippingOption($rajaOngkir, $request->validated('village_code'), $weight, $request->validated('shipping_option'));
+        $order = $orderService->checkout($request->user(), [
+            ...$request->shipping(),
+            'shipping_courier' => $option['courier'],
+            'shipping_service' => $option['service'],
+            'shipping_etd' => $option['etd'],
+            'shipping_weight' => $weight,
+            'shipping_cost' => $option['cost'],
         ]);
-        $order = $orderService->checkout($request->user(), $shipping);
 
         $midtransService->getOrCreateSnapToken($order);
 
@@ -114,5 +126,29 @@ class CheckoutController extends Controller
         };
 
         return to_route('orders.show', $order)->with('status', $message);
+    }
+
+    /**
+     * Ongkos kirim selalu dihitung ulang di server; nilai dari browser tidak dipercaya.
+     *
+     * @return array{courier: string, service: string, etd: string, cost: int}
+     */
+    private function resolveShippingOption(RajaOngkirService $rajaOngkir, string $villageCode, int $weight, string $selectedKey): array
+    {
+        try {
+            $options = $rajaOngkir->quoteForVillage($villageCode, $weight);
+        } catch (RuntimeException $exception) {
+            throw ValidationException::withMessages(['shipping_option' => $exception->getMessage()]);
+        }
+
+        $option = collect($options)->firstWhere('key', $selectedKey);
+
+        if ($option === null) {
+            throw ValidationException::withMessages([
+                'shipping_option' => 'Layanan pengiriman yang dipilih tidak tersedia. Pilih ulang layanan pengiriman.',
+            ]);
+        }
+
+        return $option;
     }
 }
